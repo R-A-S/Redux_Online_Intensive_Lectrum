@@ -1,9 +1,9 @@
 // Core
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Control } from 'react-redux-form';
 import cx from 'classnames';
-import { Map } from 'immutable';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -13,14 +13,25 @@ import { book } from '../../navigation/book';
 // Components
 import { Input } from '../../components';
 
+// Actions
+import { profileActions } from '../../bus/profile/actions';
+
+const mapStateToProps = (state) => {
+    return {
+        isFetching: state.ui.get('isFetching'),
+        profile:    state.profile,
+    };
+};
+
+const mapDispatchToProps = profileActions;
+
+@connect(
+    mapStateToProps,
+    mapDispatchToProps
+)
 export default class Profile extends Component {
     static defaultProps = {
-        // State
-        isFetching: false,
-        profile:    Map(),
-
         // Actions
-        updateNameAsync:   () => {},
         updateAvatarAsync: () => {},
     };
 
@@ -47,7 +58,10 @@ export default class Profile extends Component {
         const buttonMessage = isFetching ? 'Загрузка...' : 'Обновить профиль';
 
         return (
-            <Form className = { Styles.form } model = 'forms.user.profile' onSubmit = { this._submitUserInfo }>
+            <Form
+                className = { Styles.form }
+                model = 'forms.user.profile'
+                onSubmit = { this._submitUserInfo }>
                 <div className = { Styles.wrapper }>
                     <div>
                         <h1>Привет, {profile.get('firstName')}</h1>
@@ -79,10 +93,14 @@ export default class Profile extends Component {
                             model = 'forms.user.profile.lastName'
                             placeholder = 'Фамилия'
                             validators = { {
-                                valid: (lastName) => !validateLength(lastName, 1),
+                                valid: (lastName) =>
+                                    !validateLength(lastName, 1),
                             } }
                         />
-                        <button className = { buttonStyle } disabled = { isFetching } type = 'submit'>
+                        <button
+                            className = { buttonStyle }
+                            disabled = { isFetching }
+                            type = 'submit'>
                             {buttonMessage}
                         </button>
                     </div>
