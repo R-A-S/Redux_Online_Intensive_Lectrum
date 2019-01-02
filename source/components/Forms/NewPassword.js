@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    updatePasswordAsync: profileActions.updatePasswordAsyncAsync,
+    updatePasswordAsync: profileActions.updatePasswordAsync,
 };
 
 @connect(

@@ -37,7 +37,7 @@ export const profileActions = {
         };
     },
 
-    updatePasswordAsyncAsync: (newPassword) => {
+    updatePasswordAsync: (newPassword) => {
         return {
             type:    types.UPDATE_PASSWORD_ASYNC,
             payload: newPassword,
