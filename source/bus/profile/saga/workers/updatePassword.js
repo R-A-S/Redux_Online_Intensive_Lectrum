@@ -5,6 +5,7 @@ import { put, apply } from 'redux-saga/effects';
 import { api } from '../../../../REST';
 import { uiActions } from '../../../ui/actions';
 import { profileActions } from '../../../profile/actions';
+import { notificationActions } from '../../../notification/actions';
 
 export function* updatePassword ({ payload: newPassword }) {
     try {
@@ -23,9 +24,19 @@ export function* updatePassword ({ payload: newPassword }) {
         }
 
         yield put(profileActions.fillProfile(updatedProfile));
+        yield put(
+            notificationActions.showNotification('Пароль успешно изменен!')
+        );
     } catch (error) {
         yield put(
             uiActions.emitError(error.message, '→ updatePassword worker')
+        );
+        yield put(
+            notificationActions.showNotification(
+                'Пароль не был изменен!',
+                'error',
+                '→ updatePassword'
+            )
         );
     } finally {
         yield put(uiActions.stopFetching());

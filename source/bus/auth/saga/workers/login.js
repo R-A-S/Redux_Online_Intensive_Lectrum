@@ -7,6 +7,7 @@ import { api } from '../../../../REST';
 import { authActions } from '../../../auth/actions';
 import { uiActions } from '../../../ui/actions';
 import { profileActions } from '../../../profile/actions';
+import { notificationActions } from '../../../notification/actions';
 
 export function* login ({ payload: credentials }) {
     try {
@@ -36,8 +37,16 @@ export function* login ({ payload: credentials }) {
             actions.change('forms.user.profile.lastName', profile.lastName)
         );
         yield put(authActions.authenticate());
+        yield put(notificationActions.showNotification('Добро пожаловать!'));
     } catch (error) {
         yield put(uiActions.emitError(error.message, '→ login worker'));
+        yield put(
+            notificationActions.showNotification(
+                'Логин или пароль - неправильные!',
+                'error',
+                '→ login worker'
+            )
+        );
     } finally {
         yield put(uiActions.stopFetching());
     }
